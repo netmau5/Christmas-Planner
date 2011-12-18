@@ -1,0 +1,195 @@
+<!HTML>
+<html>
+<head>
+<title>Christmas Planner</title>
+<link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
+<link rel="stylesheet" href="css/main.css">
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery.json-2.3.min.js"></script>
+<script type="text/javascript" src="js/bootstrap-modal.js"></script>
+<script type="text/javascript" src="js/underscore-min.js"></script>
+<script type="text/javascript" src="js/backbone-min.js"></script>
+<script type="text/javascript" src="js/mustache.js"></script>
+<script type="text/javascript" src="js/jstorage.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+</head>
+<body>
+
+<div class="container">
+	<div class="row">
+		<div class="span16 header">
+			<h1>Christmas Planner</h1>
+		</div>
+	</div>
+	<div class="row">
+		<div class="span10">
+			
+			<div class='well control-bar'>
+				<button class='btn link-add-person' 
+					data-controls-modal='modal-add-person'
+					data-backdrop="true"
+					data-keyboard="true">Add Person</button>
+				<h2>Plan</h2>
+			</div>
+			
+			<div id="people">
+				<div class='no-people alert-message block-message info'>
+					Welcome to Christmas Planner. Your plans will be stored
+					locally in your browser, so feel free to come back whenever you 
+					need to tweak them. To get started, add a person for whom you'd like 
+					to get a gift.
+				</div>
+		    </div>
+		</div>
+		<div class="span6">
+			<div class='budget'>
+				<div class='well'>
+					<form>
+					<div class='budget-amount'>
+						<div class="input-prepend">
+							<span class="add-on">$</span>
+							<input class="medium money" size="16" type="text"/>
+						</div>
+					</div>
+					<h2>Budget</h2>
+					</form>
+				</div>
+				<div class='purchases'>
+					
+				</div>
+				<div class='actions'>
+					<table class='condensed-table purchase-summary'>
+						<tr>
+							<td>Cost</td>
+							<td><span class='total-cost negative'>$0</span></td>
+						</tr>
+						<tr>
+							<td>Remaining</td>
+							<td><span class='total'>$0</span></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<div class='modal hide fade' id='modal-add-gift'>
+	<div class="modal-header">
+  		<a href="#" class="close">x</a>
+      	<h3>Add/Edit Gift</h3>
+    </div>
+    <div class="modal-body">
+		<form name="form-gift">
+      		<fieldset>
+	        	<div class="clearfix">
+					<label for="gift-name">Name</label>
+					<div class="input">
+						<input class="xlarge" id="gift-name" name="name" size="30" type="text"/>
+					</div>
+				</div><!-- /clearfix -->
+				<div class="clearfix">
+					<label for="link">Link</label>
+					<div class="input input-prepend">
+						<span class="add-on">url</span>
+						<input class="large" id="link" name="link" size="30" type="text"/>
+					</div>
+				</div><!-- /clearfix -->
+				<div class="clearfix">
+					<label for="cost">Cost</label>
+					<div class="input input-prepend">
+						<span class="add-on">$</span>
+						<input class="large money" id="cost" name="cost" size="30" type="text"/>
+					</div>
+				</div><!-- /clearfix -->
+	        </fieldset>
+			<input type='hidden' name='person-cid'/>
+			<input type='hidden' name='gift-cid'/>
+		</form>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="btn success">Save</a>
+      <a href="#" class="btn secondary">Cancel</a>
+    </div>
+</div>
+
+<div class='modal hide fade' id='modal-add-person'>
+	<div class="modal-header">
+  		<a href="#" class="close">x</a>
+	      <h3>Add Person</h3>
+	    </div>
+    <div class="modal-body">
+		<form name="form-person">
+      	<fieldset>
+          <div class="clearfix">
+            <label for="person-name">Name</label>
+            <div class="input">
+              <input class="xlarge" id="person-name" name="name" size="30" type="text"/>
+            </div>
+          </div><!-- /clearfix -->
+        </fieldset>
+		</form>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="btn success">Save</a>
+      <a href="#" class="btn secondary">Cancel</a>
+    </div>
+</div>
+
+<script type="text/html" id="template-person">
+	<table class='person condensed-table' cid="{{cid}}">
+		<thead>
+			<tr>
+				<th>
+					<a href='Person/{{cid}}/remove' class='btn danger routed'>Delete</a>
+					<button class='btn link-add-gift'
+						data-controls-modal='modal-add-gift'
+						data-backdrop="true"
+						data-keyboard="true"
+						parm-person-cid="{{cid}}">Add Gift</button>
+					<h3>{{attrs.name}}</h3>
+				</th>
+			</tr>
+		</thead>
+		<tbody><tr><td>
+			<table class='table-gifts'>
+				<!-- gifts go here -->
+			</table>
+		</td></tr></tbody>
+	</table>
+</script>
+
+<script type="text/html" id="template-gift">
+	<tr class='gift' cid='{{cid}}'>
+		<td class='column-buy'>
+			<input type='checkbox' class='checkbox-purchase-selected' {{#attrs.purchased}}checked='checked'{{/attrs.purchased}}/>
+		</td>
+		<td>
+			<span class='cost'>${{attrs.cost}}</span>&nbsp;&nbsp;
+			{{#attrs.link}}<a href="{{attrs.link}}" target="_blank">{{/attrs.link}}
+			{{attrs.name}}
+			{{#attrs.link}}</a>{{/attrs.link}}
+		</td>
+		<td class='column-controls'>
+			<button href='#Person/{{attrs.personCid}}/Gift/{{cid}}/remove' class='btn routed danger link-delete'>Delete</button>
+			<button href='#Person/{{attrs.personCid}}/Gift/{{cid}}/edit' class='btn routed link-edit'>Edit</button>
+		</td>
+	</tr>
+</script>
+
+<script type="text/html" id="template-purchase">
+	<div class='purchase' cid="{{cid}}">
+		<span class='cost'>${{attrs.cost}}</span>
+		<span class='gift-name'>
+			{{#attrs.link}}<a href="{{attrs.link}}" target="_blank">{{/attrs.link}}
+			{{attrs.name}}
+			{{#attrs.link}}</a>{{/attrs.link}}
+		</span>
+		<span class='person-name'>{{attrs.personName}}</span>
+	</div>
+</script>
+
+</body>
+</html>

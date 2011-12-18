@@ -1,0 +1,55 @@
+.header {
+  height: 300px;
+  background: url('../img/header.jpg') top left no-repeat;
+  margin: 20px 0 20px 0;
+}
+
+  .header h1 { text-indent: -9999px; }
+  
+input { height: 28px; }
+
+h3 { font-size: 16px; }
+
+.cost { font-weight: bold; }
+
+.control-bar {}
+
+  .control-bar .link-add-person { float:right; position: relative; top: 4px; margin-left: 5px; }
+
+.person {}
+
+  .person .btn { float: right; display: inline-block; margin-left: 5px; }
+
+  .person .column-buy { width: 20px; }
+  
+  .person .column-controls { width: 130px; }
+  
+  .person .table-gifts tbody tr:first-child td { border-top: 0; }
+  .person .table-gifts tbody tr:last-child td { border-bottom: 1px solid #DDD; }
+  
+.budget { 
+  background-color: #f9e9ff; 
+}
+
+  .budget form { margin: 0; }
+  
+  .budget .well { margin-bottom: 0; }
+  .budget .actions { margin-top: 0; }
+
+  .budget .budget-amount { float: right; }
+  
+    .budget .budget-amount input { text-align: right; }
+    
+  .budget .purchase-summary td { border-width: 0; text-align: right; }
+  
+  .budget .positive { color: green; }
+  .budget .negative { color: red; }
+  
+.purchase { 
+  margin: 20px 0 20px 15px;
+}
+
+  .purchase > * { display: block; }
+  .purchase .gift-name { font-weight: bold; }
+  .purchase .person-name { color: #555; }
+  .purchase .cost { float: right; text-align: right; margin-right: 20px; }
